@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: #070b14;
+  color: #e6edf7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+/* Custom scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #283656 transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #1c2840;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #283656;
+  background-clip: content-box;
+}
+
+/* Selection */
+::selection {
+  background: rgba(59, 102, 255, 0.35);
+  color: #fff;
+}
+
+/* Code block token colors (manual highlighting) */
+.tok-kw { color: #8eb3ff; font-weight: 600; }
+.tok-str { color: #34d399; }
+.tok-com { color: #5a6b8a; font-style: italic; }
+.tok-num { color: #fbbf24; }
+.tok-fn { color: #2dd4bf; }
+.tok-var { color: #f0a0b0; }
+.tok-op { color: #9aa7c7; }
+.tok-attr { color: #c4b5fd; }
+.tok-tag { color: #fb7185; }
+.tok-const { color: #fbbf24; }
+.tok-type { color: #5d8aff; }
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-glow transition-all duration-200 hover:bg-brand-400 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-ink-700 bg-ink-850/60 px-5 py-3 text-sm font-semibold text-slate-200 transition-all duration-200 hover:border-ink-600 hover:bg-ink-800 active:scale-[0.98];
+  }
+  .card {
+    @apply rounded-2xl border border-ink-700/70 bg-ink-850/70 backdrop-blur-sm;
+  }
+}
