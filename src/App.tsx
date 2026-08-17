@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { AnswerRecord, Phase, Question, QuizResult } from '@/types';
 import { useQuestions } from '@/hooks/useQuestions';
 import { buildResult } from '@/lib/quiz';
@@ -106,7 +106,7 @@ export default function App() {
     } else {
       setCurrentIdx((i) => i + 1);
     }
-  }, [currentIdx, quizQuestions, answers, elapsedSec]);
+  }, [currentIdx, quizQuestions, answers]);
 
   const handleQuit = useCallback(() => {
     setPhase('config');
