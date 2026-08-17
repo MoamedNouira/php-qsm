@@ -5,171 +5,81 @@ const SUPABASE_KEY = 'sb_publishable_C6c9KznLS9a2gzO7rcxskg_V9tUIjmB';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+
 const questions = [
     {
         category: 'PHP',
-        question: 'Quel est le résultat de ce code PHP?',
-        code_snippet: '$a = "10";\n$b = 10;\nvar_dump($a == $b);\nvar_dump($a === $b);',
+        question: 'Quel est le résultat correct de l\'instruction suivante ?',
+        code_snippet: '$arr = [1, 2, 3];\n$arr[] = 4;\nprint_r($arr);',
         options: [
-            { key: 'a', text: 'true, false' },
-            { key: 'b', text: 'false, true' },
-            { key: 'c', text: 'true, true' },
-            { key: 'd', text: 'false, false' },
+            { key: 'a', text: 'Génère une erreur (Error)' },
+            { key: 'b', text: 'Ajoute l\'élément 4 au début du tableau' },
+            { key: 'c', text: 'Ajoute l\'élément 4 à la fin du tableau' },
+            { key: 'd', text: 'Supprime le tableau' },
         ],
-        correct_key: 'a',
-        explanation: 'En PHP, == vérifie l\'égalité de valeur (10 == "10" est vrai), tandis que === vérifie l\'égalité de type et de valeur. "10" (string) === 10 (int) est faux.',
+        correct_key: 'c',
+        explanation: 'En PHP, l\'utilisation de crochets vides [] avec un tableau permet d\'ajouter automatiquement un nouvel élément à la fin du tableau.',
+    },
+    {
+        category: 'Web',
+        question: 'Quel est l\'objectif principal de l\'utilisation du code d\'état HTTP 403 ?',
+        code_snippet: null,
+        options: [
+            { key: 'a', text: 'La ressource est introuvable (Not Found)' },
+            { key: 'b', text: 'La requête est refusée car l\'utilisateur n\'a pas les permissions nécessaires (Forbidden)' },
+            { key: 'c', text: 'Erreur interne du serveur (Internal Server Error)' },
+            { key: 'd', text: 'L\'utilisateur n\'est pas connecté (Unauthorized)' },
+        ],
+        correct_key: 'b',
+        explanation: 'Le code 403 signifie que le serveur a compris la requête mais refuse de l\'exécuter en raison d\'un manque de permissions, tandis que 401 indique qu\'une authentification est requise.',
+    },
+    {
+        category: 'DevOps',
+        question: 'Quelle est la fonction principale de Docker ?',
+        code_snippet: null,
+        options: [
+            { key: 'a', text: 'Concevoir des interfaces utilisateur' },
+            { key: 'b', text: 'Gérer uniquement les bases de données' },
+            { key: 'c', text: 'Empaqueter des applications et les exécuter dans des environnements isolés (Conteneurs)' },
+            { key: 'd', text: 'Développer de nouveaux langages de programmation' },
+        ],
+        correct_key: 'c',
+        explanation: 'Docker permet aux développeurs d\'empaqueter leurs applications avec toutes leurs dépendances dans des "conteneurs" afin de garantir un fonctionnement identique sur n\'importe quelle machine.',
     },
     {
         category: 'PHP',
-        question: 'Quelle est la différence principale entre include() et require() en PHP?',
-        code_snippet: null,
+        question: 'Quel est l\'intérêt du Type Hinting en PHP ?',
+        code_snippet: 'function sum(int $a, int $b) {\n  return $a + $b;\n}',
         options: [
-            { key: 'a', text: 'Il n\'y a aucune différence' },
-            { key: 'b', text: 'require() génère une erreur fatale si le fichier n\'existe pas, include() génère un avertissement' },
-            { key: 'c', text: 'include() est plus rapide que require()' },
-            { key: 'd', text: 'require() est utilisé pour les classes, include() pour les fonctions' },
+            { key: 'a', text: 'Augmenter la vitesse d\'exécution du code' },
+            { key: 'b', text: 'Réduire la taille du fichier' },
+            { key: 'c', text: 'Imposer le type des données passées en paramètre et éviter les erreurs' },
+            { key: 'd', text: 'Faire fonctionner le code uniquement sur PHP 5' },
         ],
-        correct_key: 'b',
-        explanation: 'La principale différence est la gestion des erreurs: require() arrête l\'exécution du script avec une erreur fatale, tandis que include() continue avec un avertissement.',
-    },
-    {
-        category: 'Architecture',
-        question: 'Qu\'est-ce que le pattern MVC?',
-        code_snippet: null,
-        options: [
-            { key: 'a', text: 'Multi-View Component' },
-            { key: 'b', text: 'Model-View-Controller' },
-            { key: 'c', text: 'Module-Validation-Cache' },
-            { key: 'd', text: 'Microservice-Virtualization-Cloud' },
-        ],
-        correct_key: 'b',
-        explanation: 'MVC est un pattern architectural qui sépare une application en trois composants interconnectés: le Model (données), la View (présentation) et le Controller (logique).',
-    },
-    {
-        category: 'Architecture',
-        question: 'Quel principle SOLID traite de la segmentation en petits rôles?',
-        code_snippet: null,
-        options: [
-            { key: 'a', text: 'Single Responsibility Principle' },
-            { key: 'b', text: 'Open/Closed Principle' },
-            { key: 'c', text: 'Liskov Substitution Principle' },
-            { key: 'd', text: 'Interface Segregation Principle' },
-        ],
-        correct_key: 'a',
-        explanation: 'Le SRP stipule qu\'une classe devrait avoir une seule raison de changer, c\'est-à-dire une seule responsabilité.',
-    },
-    {
-        category: 'Base de Données',
-        question: 'Quelle est la différence entre une JOIN INNER et LEFT?',
-        code_snippet: null,
-        options: [
-            { key: 'a', text: 'Aucune différence en termes de résultats' },
-            { key: 'b', text: 'INNER JOIN retourne seulement les lignes correspondantes, LEFT JOIN retourne aussi les non-correspondances de la table gauche' },
-            { key: 'c', text: 'LEFT JOIN est plus rapide que INNER JOIN' },
-            { key: 'd', text: 'INNER JOIN peut causer des doublons, pas LEFT JOIN' },
-        ],
-        correct_key: 'b',
-        explanation: 'INNER JOIN retourne seulement les lignes où la condition de jointure est satisfaite. LEFT JOIN retourne toutes les lignes de la table gauche même s\'il n\'y a pas de correspondance à droite (avec NULL).',
-    },
-    {
-        category: 'Base de Données',
-        question: 'Qu\'est-ce qu\'une transaction en base de données?',
-        code_snippet: null,
-        options: [
-            { key: 'a', text: 'Un ensemble de transactions SELECT' },
-            { key: 'b', text: 'Un ensemble d\'opérations SQL qui sont soit toutes exécutées, soit toutes annulées' },
-            { key: 'c', text: 'Un backup automatique des données' },
-            { key: 'd', text: 'Un index pour accélérer les requêtes' },
-        ],
-        correct_key: 'b',
-        explanation: 'Une transaction garantit l\'atomicité: soit toutes les opérations SQL sont validées (COMMIT), soit toutes sont annulées (ROLLBACK).',
+        correct_key: 'c',
+        explanation: 'Le Type Hinting aide à écrire un code plus sûr et plus lisible en s\'assurant que les variables fournies correspondent au type attendu (par exemple int ou string).',
     },
     {
         category: 'Sécurité',
-        question: 'Comment éviter les injections SQL?',
+        question: 'Qu\'est-ce que le XSS (Cross-Site Scripting) ?',
         code_snippet: null,
         options: [
-            { key: 'a', text: 'Utiliser implode() pour joindre les paramètres' },
-            { key: 'b', text: 'Utiliser des prepared statements avec des paramètres liés' },
-            { key: 'c', text: 'Convertir toutes les entrées en entiers' },
-            { key: 'd', text: 'Utiliser addslashes() sur toutes les entrées' },
-        ],
-        correct_key: 'b',
-        explanation: 'Les prepared statements séparent le code SQL des données, empêchant les attaques par injection SQL. addslashes() n\'est pas suffisant car il peut être contourné.',
-    },
-    {
-        category: 'Sécurité',
-        question: 'Qu\'est-ce que le CSRF (Cross-Site Request Forgery)?',
-        code_snippet: null,
-        options: [
-            { key: 'a', text: 'Un virus qui infecte les fichiers du serveur' },
-            { key: 'b', text: 'Une attaque où un utilisateur est forcé à effectuer des actions non autorisées sur un site où il est authentifié' },
-            { key: 'c', text: 'Un problème de performance du serveur' },
-            { key: 'd', text: 'Une erreur de syntaxe PHP' },
-        ],
-        correct_key: 'b',
-        explanation: 'CSRF est une attaque web où un attaquant trompe un utilisateur authentifié pour qu\'il effectue une action sur un site sans son consentement. On se protège avec des tokens CSRF.',
-    },
-    {
-        category: 'Performance',
-        question: 'Qu\'est-ce que le caching et pourquoi est-ce important?',
-        code_snippet: null,
-        options: [
-            { key: 'a', text: 'Un moyen de stocker les mots de passe en sécurité' },
-            { key: 'b', text: 'Un processus de sauvegarde des données dans une mémoire rapide pour améliorer les performances' },
-            { key: 'c', text: 'Un type de base de données' },
-            { key: 'd', text: 'Une fonction PHP pour compresser les fichiers' },
-        ],
-        correct_key: 'b',
-        explanation: 'Le caching stocke les données fréquemment accédées en mémoire rapide (Redis, Memcached) pour réduire les accès à la base de données et améliorer les performances.',
-    },
-    {
-        category: 'Performance',
-        question: 'Quel outil peut-on utiliser pour profiler les performances d\'une application PHP?',
-        code_snippet: null,
-        options: [
-            { key: 'a', text: 'PHPUnit' },
-            { key: 'b', text: 'Xdebug' },
-            { key: 'c', text: 'Composer' },
-            { key: 'd', text: 'Docker' },
-        ],
-        correct_key: 'b',
-        explanation: 'Xdebug est un debugger et profiler PHP qui permet d\'analyser les performances, les appels de fonctions et l\'utilisation de la mémoire.',
-    },
-    {
-        category: 'OOP',
-        question: 'Qu\'est-ce que l\'héritage en POO?',
-        code_snippet: null,
-        options: [
-            { key: 'a', text: 'Un mécanisme où une classe hérite des propriétés et méthodes d\'une autre classe' },
-            { key: 'b', text: 'Un processus de copie de code entre fichiers' },
-            { key: 'c', text: 'Un type de commentaire en PHP' },
-            { key: 'd', text: 'Une fonction pour dupliquer des objets' },
+            { key: 'a', text: 'L\'injection de code JavaScript malveillant dans une page web exécutée par d\'autres utilisateurs' },
+            { key: 'b', text: 'L\'envoi d\'un grand nombre de requêtes pour surcharger le serveur' },
+            { key: 'c', text: 'Le devinement du mot de passe d\'un utilisateur' },
+            { key: 'd', text: 'Le vol de fichiers de la base de données' },
         ],
         correct_key: 'a',
-        explanation: 'L\'héritage permet à une classe (enfant) d\'hériter des propriétés et méthodes d\'une autre classe (parent), favorisant la réutilisabilité du code.',
-    },
-    {
-        category: 'OOP',
-        question: 'Quelle est la différence entre une classe abstraite et une interface?',
-        code_snippet: null,
-        options: [
-            { key: 'a', text: 'Il n\'y a aucune différence' },
-            { key: 'b', text: 'Une classe abstraite peut avoir des implémentations, une interface ne peut pas' },
-            { key: 'c', text: 'Une interface peut avoir des propriétés, une classe abstraite non' },
-            { key: 'd', text: 'Une classe abstraite est plus rapide qu\'une interface' },
-        ],
-        correct_key: 'b',
-        explanation: 'Une classe abstraite peut contenir des méthodes implémentées et des propriétés, tandis qu\'une interface (en PHP 7+) ne peut contenir que la signature des méthodes (sauf les constantes).',
-    },
+        explanation: 'Une attaque XSS se produit lorsqu\'un attaquant parvient à injecter des scripts malveillants dans une page web consultée par d\'autres utilisateurs, ce qui lui permet de voler des cookies ou de manipuler le contenu.',
+    }
 ];
 
 async function main() {
-    console.log('🚀 بدء إضافة الأسئلة إلى Supabase...\n');
+    console.log('🚀 Commencez à ajouter des questions à Supabase...\n');
 
     try {
         // حذف الأسئلة القديمة
-        console.log('🗑️  حذف الأسئلة القديمة...');
+        /*console.log('🗑️  Supprimer les anciennes questions...');
         const { data: existingData, error: deleteError } = await supabase
             .from('questions')
             .select('id')
@@ -177,10 +87,10 @@ async function main() {
 
         if (existingData && existingData.length > 0) {
             await supabase.from('questions').delete().neq('id', -1);
-        }
+        }*/
 
         // إضافة الأسئلة الجديدة
-        console.log(`📝 إضافة ${questions.length} سؤال...\n`);
+        console.log(`📝 ajout ${questions.length} سؤال...\n`);
 
         for (let i = 0; i < questions.length; i++) {
             const question = questions[i];
@@ -196,17 +106,17 @@ async function main() {
             ]);
 
             if (error) {
-                console.error(`❌ خطأ في السؤال ${i + 1}:`, error.message);
+                console.error(`❌ La question est incorrecte. ${i + 1}:`, error.message);
             } else {
-                console.log(`  ✅ تمت إضافة السؤال ${i + 1}/${questions.length}`);
+                console.log(`  ✅ La question a été ajoutée.${i + 1}/${questions.length}`);
             }
         }
 
-        console.log('\n✅ تم إضافة جميع الأسئلة بنجاح!');
-        console.log('🎉 يمكنك الآن فتح التطبيق على http://localhost:5173/\n');
+        console.log('\n✅ Toutes les questions ont été ajoutées avec succès ! ');
+        console.log('🎉  Vous pouvez maintenant ouvrir l application sur http://localhost:5173/\n');
         process.exit(0);
     } catch (error) {
-        console.error('❌ خطأ:', error.message);
+        console.error('❌ erreur:', error.message);
         process.exit(1);
     }
 }

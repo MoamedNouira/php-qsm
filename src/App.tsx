@@ -27,21 +27,21 @@ export default function App() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<AnswerRecord[]>([]);
   const [result, setResult] = useState<QuizResult | null>(null);
-  const [elapsedSec, setElapsedSec] = useState(0);
-  const timerRef = useRef<number | null>(null);
 
-  // Timer management
-  useEffect(() => {
-    if (phase === 'quiz') {
-      timerRef.current = window.setInterval(() => {
-        setElapsedSec((s) => s + 1);
-      }, 1000);
-      return () => {
-        if (timerRef.current) window.clearInterval(timerRef.current);
-      };
-    }
-    return;
-  }, [phase]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const handleStart = useCallback(
     (category: string) => {
@@ -55,7 +55,7 @@ export default function App() {
       setQuizQuestions(shuffle(pool));
       setCurrentIdx(0);
       setAnswers([]);
-      setElapsedSec(0);
+
       setResult(null);
       setPhase('quiz');
     },
@@ -97,7 +97,8 @@ export default function App() {
         correct,
         incorrect,
         skipped,
-        elapsedSec,
+
+        0,
         finalAnswers
       );
       setResult(res);
@@ -112,7 +113,7 @@ export default function App() {
     setQuizQuestions([]);
     setAnswers([]);
     setResult(null);
-    setElapsedSec(0);
+
   }, []);
 
   const handleRestart = useCallback(() => {
@@ -137,7 +138,7 @@ export default function App() {
         <ProgressHeader
           current={currentIdx + 1}
           total={quizQuestions.length}
-          elapsedSec={elapsedSec}
+
           category={
             selectedCategory === 'all'
               ? 'Tous les sujets'

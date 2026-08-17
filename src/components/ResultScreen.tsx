@@ -1,6 +1,5 @@
 import {
   Trophy,
-  Clock,
   Target,
   RotateCcw,
   Eye,
@@ -102,9 +101,8 @@ export function ResultScreen({
           <TrendingUp className="h-4 w-4 text-slate-400" />
           <span className="text-sm text-slate-400">Niveau estimé :</span>
           <span
-            className={`bg-gradient-to-r bg-clip-text text-base font-bold ${
-              seniorityStyle.split(' ').slice(-1)[0]
-            }`}
+            className={`bg-gradient-to-r bg-clip-text text-base font-bold ${seniorityStyle.split(' ').slice(-1)[0]
+              }`}
           >
             {result.seniority}
           </span>
@@ -112,7 +110,7 @@ export function ResultScreen({
       </div>
 
       {/* Stats grid */}
-      <div className="mt-8 grid grid-cols-2 gap-3 animate-slide-up sm:grid-cols-4">
+      <div className="mt-8 grid grid-cols-2 gap-3 animate-slide-up sm:grid-cols-3">
         <StatCard
           icon={<Target className="h-4 w-4" />}
           label="Correctes"
@@ -130,12 +128,6 @@ export function ResultScreen({
           label="Ignorées"
           value={String(result.skipped)}
           tone="muted"
-        />
-        <StatCard
-          icon={<Clock className="h-4 w-4" />}
-          label="Temps"
-          value={formatTime(result.timeSpentSec)}
-          tone="brand"
         />
       </div>
 
