@@ -7,7 +7,6 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import type { QuizResult } from '@/types';
-import { formatTime } from '@/lib/quiz';
 
 interface ResultScreenProps {
   result: QuizResult;

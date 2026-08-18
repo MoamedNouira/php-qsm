@@ -3,7 +3,7 @@ import type { Question } from '@/types';
 export const fallbackQuestions: Question[] = [
     {
         id: 1,
-        category: 'PHP',
+        category: 'PHP / OO',
         question: 'Quel est le résultat de ce code PHP?',
         code_snippet: `$a = "10";
 $b = 10;
@@ -20,7 +20,7 @@ var_dump($a === $b);`,
     },
     {
         id: 2,
-        category: 'PHP',
+        category: 'PHP / OO',
         question: 'Quelle est la différence principale entre include() et require() en PHP?',
         code_snippet: null,
         options: [
@@ -34,7 +34,7 @@ var_dump($a === $b);`,
     },
     {
         id: 3,
-        category: 'Architecture',
+        category: 'Software Architecture',
         question: 'Qu\'est-ce que le pattern MVC?',
         code_snippet: null,
         options: [
@@ -48,7 +48,7 @@ var_dump($a === $b);`,
     },
     {
         id: 4,
-        category: 'Architecture',
+        category: 'Software Architecture',
         question: 'Quel principle SOLID traite de la segmentation en petits rôles?',
         code_snippet: null,
         options: [
@@ -62,7 +62,7 @@ var_dump($a === $b);`,
     },
     {
         id: 5,
-        category: 'Base de Données',
+        category: 'SQL & Bases de données',
         question: 'Quelle est la différence entre une JOIN INNER et LEFT?',
         code_snippet: null,
         options: [
@@ -76,7 +76,7 @@ var_dump($a === $b);`,
     },
     {
         id: 6,
-        category: 'Base de Données',
+        category: 'SQL & Bases de données',
         question: 'Qu\'est-ce qu\'une transaction en base de données?',
         code_snippet: null,
         options: [
@@ -90,7 +90,7 @@ var_dump($a === $b);`,
     },
     {
         id: 7,
-        category: 'Sécurité',
+        category: 'Web Security',
         question: 'Comment éviter les injections SQL?',
         code_snippet: null,
         options: [
@@ -104,7 +104,7 @@ var_dump($a === $b);`,
     },
     {
         id: 8,
-        category: 'Sécurité',
+        category: 'Web Security',
         question: 'Qu\'est-ce que le CSRF (Cross-Site Request Forgery)?',
         code_snippet: null,
         options: [
@@ -118,7 +118,7 @@ var_dump($a === $b);`,
     },
     {
         id: 9,
-        category: 'Performance',
+        category: 'Testing & Qualité',
         question: 'Qu\'est-ce que le caching et pourquoi est-ce important?',
         code_snippet: null,
         options: [
@@ -132,7 +132,7 @@ var_dump($a === $b);`,
     },
     {
         id: 10,
-        category: 'Performance',
+        category: 'Testing & Qualité',
         question: 'Quel outil peut-on utiliser pour profiler les performances d\'une application PHP?',
         code_snippet: null,
         options: [
@@ -146,7 +146,7 @@ var_dump($a === $b);`,
     },
     {
         id: 11,
-        category: 'OOP',
+        category: 'PHP / OO',
         question: 'Qu\'est-ce que l\'héritage en POO?',
         code_snippet: null,
         options: [
@@ -160,7 +160,7 @@ var_dump($a === $b);`,
     },
     {
         id: 12,
-        category: 'OOP',
+        category: 'PHP / OO',
         question: 'Quelle est la différence entre une classe abstraite et une interface?',
         code_snippet: null,
         options: [

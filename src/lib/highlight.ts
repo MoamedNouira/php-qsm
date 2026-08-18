@@ -172,7 +172,7 @@ export function tokenize(snippet: string): Token[] {
       continue;
     }
     // Operators / punctuation
-    if (/[=+\-*/%<>!&|?:.,;()\[\]{}@]/.test(ch)) {
+    if (/[=+\-*/%<>!&|?:.,;()[\]{}@]/.test(ch)) {
       tokens.push({ type: 'op', value: ch });
       i++;
       continue;

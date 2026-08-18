@@ -1,7 +1,7 @@
-import { useCallback, useState } from 'react';
-import type { AnswerRecord, Phase, Question, QuizResult } from '@/types';
+import { useMemo } from 'react';
+import type { Phase } from '@/types';
 import { useQuestions } from '@/hooks/useQuestions';
-import { buildResult } from '@/lib/quiz';
+import { useQuizReducer } from '@/hooks/useQuizReducer';
 import { ConfigScreen } from '@/components/ConfigScreen';
 import { StateScreen } from '@/components/StateScreen';
 import { QuestionView } from '@/components/QuestionView';
@@ -9,126 +9,28 @@ import { ProgressHeader } from '@/components/ProgressHeader';
 import { ResultScreen } from '@/components/ResultScreen';
 import { ReviewScreen } from '@/components/ReviewScreen';
 
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
 export default function App() {
-  const { state, retry } = useQuestions();
+  const { state: fetchState, retry } = useQuestions();
+  const { state: quiz, actions } = useQuizReducer();
 
-  const [phase, setPhase] = useState<Phase>('config');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [answers, setAnswers] = useState<AnswerRecord[]>([]);
-  const [result, setResult] = useState<QuizResult | null>(null);
+  const handleStart = useMemo(() => {
+    if (fetchState.status !== 'success') return undefined;
+    return (category: string) =>
+      actions.start(fetchState.questions, category);
+  }, [fetchState, actions]);
 
+  const handleRestart = useMemo(() => {
+    if (fetchState.status !== 'success') return undefined;
+    return () => actions.restart(fetchState.questions, quiz.selectedCategory);
+  }, [fetchState, actions, quiz.selectedCategory]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const handleStart = useCallback(
-    (category: string) => {
-      if (state.status !== 'success') return;
-      const pool =
-        category === 'all'
-          ? state.questions
-          : state.questions.filter((q) => q.category === category);
-      if (pool.length === 0) return;
-      setSelectedCategory(category);
-      setQuizQuestions(shuffle(pool));
-      setCurrentIdx(0);
-      setAnswers([]);
-
-      setResult(null);
-      setPhase('quiz');
-    },
-    [state]
-  );
-
-  const handleAnswer = useCallback(
-    (selectedKey: string) => {
-      const q = quizQuestions[currentIdx];
-      if (!q) return;
-      const rec: AnswerRecord = {
-        question: q,
-        selectedKey,
-        correct: selectedKey === q.correct_key,
-      };
-      setAnswers((prev) => {
-        const copy = [...prev];
-        copy[currentIdx] = rec;
-        return copy;
-      });
-    },
-    [quizQuestions, currentIdx]
-  );
-
-  const handleNext = useCallback(() => {
-    if (currentIdx + 1 >= quizQuestions.length) {
-      // Compute final result
-      const finalAnswers = answers.filter(Boolean);
-      let correct = 0;
-      let incorrect = 0;
-      let skipped = 0;
-      for (const a of finalAnswers) {
-        if (a.correct) correct++;
-        else incorrect++;
-      }
-      skipped = quizQuestions.length - finalAnswers.length;
-      const res = buildResult(
-        quizQuestions.length,
-        correct,
-        incorrect,
-        skipped,
-
-        0,
-        finalAnswers
-      );
-      setResult(res);
-      setPhase('result');
-    } else {
-      setCurrentIdx((i) => i + 1);
-    }
-  }, [currentIdx, quizQuestions, answers]);
-
-  const handleQuit = useCallback(() => {
-    setPhase('config');
-    setQuizQuestions([]);
-    setAnswers([]);
-    setResult(null);
-
-  }, []);
-
-  const handleRestart = useCallback(() => {
-    handleStart(selectedCategory);
-  }, [handleStart, selectedCategory]);
-
-  const handleReview = useCallback(() => setPhase('review'), []);
-  const handleBackToResult = useCallback(() => setPhase('result'), []);
-  const handleHome = useCallback(() => {
-    setPhase('config');
-    setResult(null);
-  }, []);
-
-  // Render
-  const showHeader = phase === 'quiz';
+  const showHeader = quiz.phase === 'quiz';
+  const mappedPhase: Phase =
+    fetchState.status === 'loading' || fetchState.status === 'idle'
+      ? 'loading'
+      : fetchState.status === 'error'
+        ? 'error'
+        : quiz.phase;
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
@@ -136,62 +38,79 @@ export default function App() {
 
       {showHeader && (
         <ProgressHeader
-          current={currentIdx + 1}
-          total={quizQuestions.length}
-
+          current={quiz.currentIdx + 1}
+          total={quiz.quizQuestions.length}
+          elapsedSec={quiz.elapsedSec}
           category={
-            selectedCategory === 'all'
+            quiz.selectedCategory === 'all'
               ? 'Tous les sujets'
-              : selectedCategory
+              : quiz.selectedCategory
           }
-          onQuit={handleQuit}
+          onQuit={actions.quit}
         />
       )}
 
       <main className="relative z-10">
-        {phase === 'config' &&
-          (state.status === 'idle' || state.status === 'loading' ? (
-            <StateScreen variant="loading" />
-          ) : state.status === 'error' ? (
-            <StateScreen
-              variant="error"
-              message={state.message}
-              onRetry={retry}
-            />
-          ) : (
-            <ConfigScreen
-              categories={state.categories}
-              onStart={handleStart}
-              totalQuestions={state.questions.length}
-            />
-          ))}
+        {mappedPhase === 'config' && (
+          <>
+            {(fetchState.status === 'idle' || fetchState.status === 'loading') && (
+              <StateScreen variant="loading" />
+            )}
+            {fetchState.status === 'error' && (
+              <StateScreen
+                variant="error"
+                message={fetchState.message}
+                onRetry={retry}
+              />
+            )}
+            {fetchState.status === 'success' && handleStart && (
+              <ConfigScreen
+                categories={fetchState.categories}
+                onStart={handleStart}
+                totalQuestions={fetchState.questions.length}
+              />
+            )}
+          </>
+        )}
 
-        {phase === 'quiz' && quizQuestions.length > 0 && (
+        {mappedPhase === 'loading' && fetchState.status === 'loading' && (
+          <StateScreen variant="loading" />
+        )}
+
+        {mappedPhase === 'error' && fetchState.status === 'error' && (
+          <StateScreen
+            variant="error"
+            message={fetchState.message}
+            onRetry={retry}
+          />
+        )}
+
+        {quiz.phase === 'quiz' && quiz.quizQuestions.length > 0 && (
           <QuestionView
-            key={quizQuestions[currentIdx].id}
-            question={quizQuestions[currentIdx]}
-            index={currentIdx}
-            total={quizQuestions.length}
-            onAnswer={handleAnswer}
-            onNext={handleNext}
-            isLast={currentIdx + 1 === quizQuestions.length}
+            key={quiz.quizQuestions[quiz.currentIdx].id}
+            question={quiz.quizQuestions[quiz.currentIdx]}
+            index={quiz.currentIdx}
+            total={quiz.quizQuestions.length}
+            onAnswer={actions.answer}
+            onNext={actions.next}
+            isLast={quiz.currentIdx + 1 === quiz.quizQuestions.length}
           />
         )}
 
-        {phase === 'result' && result && (
+        {quiz.phase === 'result' && quiz.result && (
           <ResultScreen
-            result={result}
-            onReview={handleReview}
-            onRestart={handleRestart}
-            onHome={handleHome}
+            result={quiz.result}
+            onReview={actions.review}
+            onRestart={handleRestart ?? (() => {})}
+            onHome={actions.home}
           />
         )}
 
-        {phase === 'review' && result && (
+        {quiz.phase === 'review' && quiz.result && (
           <ReviewScreen
-            answers={result.answers}
-            onBack={handleBackToResult}
-            onHome={handleHome}
+            answers={quiz.result.answers}
+            onBack={actions.back}
+            onHome={actions.home}
           />
         )}
       </main>

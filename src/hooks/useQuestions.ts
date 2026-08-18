@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { fallbackQuestions } from '@/lib/fallbackQuestions';
+import { logger } from '@/lib/logger';
 import type { Question } from '@/types';
 
 type FetchState =
@@ -25,6 +26,10 @@ export function useQuestions() {
           new Set(fallbackQuestions.map((q) => q.category))
         ).sort((a, b) => a.localeCompare(b));
 
+        logger.info('questions_loaded', {
+          count: fallbackQuestions.length,
+          source: 'fallback',
+        });
         setState({ status: 'success', questions: fallbackQuestions, categories });
         return;
       }
@@ -45,10 +50,15 @@ export function useQuestions() {
       ).sort((a, b) => a.localeCompare(b));
 
       setState({ status: 'success', questions, categories });
+      logger.info('questions_loaded', {
+        count: questions.length,
+        source: 'supabase',
+      });
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Erreur réseau inconnue.';
       setState({ status: 'error', message });
+      logger.error('questions_fetch_failed', { message });
     }
   }, []);
 
